@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { setExemplo, addPlayer, addPartida } from '../redux/action';
 
 class View extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             exemplo: 'Variável exemplo do state do componente View.',
             btnAddIsDisabled: true,
@@ -12,20 +12,54 @@ class View extends Component {
         }
     }
 
-    handleChangeSelect = (target) => {
-        alert('');
+    handleChangeSelect = (target, index) => {
+
         console.log(target.target.name)
         console.log(target.target.value)
-        this.setState({
-            [target.target.name]: target.value,
-            selectedNames: [...this.state.selectedNames, target.target.value]
+        if (target.target.value !== '-') {
+            const copia = this.state.selectedNames;
+            copia[index] = target.target.value;
+            this.setState({
+                [target.target.name]: target.target.value,
+
+                selectedNames: copia
+            });
+        } else {
+            //const newState = { ...this.state };
+            //newState['selectedNames'] = [];
+            //this.setState(newState);
+            const copia = [...this.state.selectedNames];
+            copia[index] = '-';
+            this.setState({
+                selectedNames: copia
+            })
+        }
+
+    }
+
+    componentDidMount() {
+        const { jogadores } = this.props;
+        let myArray = [];
+        jogadores.forEach(() => {
+            myArray.push('-');
         });
+
+        this.setState({
+            selectedNames: myArray
+        })
     }
 
     render() {
         const { exemplo, btnAddIsDisabled, selectedNames, selectPlayer1 } = this.state;
         console.log(selectedNames)
         const { dispatch, message, exemplo1, jogadores, partidas } = this.props;
+
+
+
+        const jogadoresOptions = ['-', ...jogadores];
+        for (let i = 0; i < 4; i += 1) {
+            console.log([`selectPlayer${i + 1}`])
+        }
 
         /*
         {
@@ -62,14 +96,25 @@ class View extends Component {
                     <tr>
                         <td>Proxima partida </td>
                         {
+
                             jogadores.map((jogador, index) => (
                                 <td>
-                                    <select value={selectPlayer1} name={`selectPlayer${index + 1}`} onChange={this.handleChangeSelect} >
+                                    <select name={`selectPlayer${index + 1}`} onChange={
+                                        (target) => { this.handleChangeSelect(target, index) }
+                                    } >
                                         {
-                                            jogadores.map((player, i) => {
+
+
+                                            jogadoresOptions.map((player, i) => {
+
                                                 if (!selectedNames.includes(player)) {
                                                     return <option value={player} > {player} </option>
+                                                } else if (selectedNames[index] === player) {
+                                                    return <option value={selectedNames[index]} selected > {selectedNames[index]} </option>
+                                                } else {
+                                                    //return <option value='-' >-</option>
                                                 }
+
                                             })
                                         }
                                     </select>
