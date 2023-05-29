@@ -7,7 +7,7 @@ import View from './pages/View';
 function App() {
   return (
     <div className="App">
-      Poker Counter App - hehe
+      <h1>Poker Counter App</h1>
       <Switch>
         <Route exact path="/poker-counter" component={View} ></Route>
         <Redirect to='/poker-counter' />

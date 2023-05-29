@@ -1,5 +1,6 @@
 const INITIAL_STATE = {
     id: 0,
+    pontuacao: [5, 3, 1, 0],
     rounds: [],
 }
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setExemplo, addPlayer, addPartida } from '../redux/action';
+import { setExemplo, addPlayer, addPartida, addPontos } from '../redux/action';
 
 class View extends Component {
     constructor(props) {
@@ -9,6 +9,7 @@ class View extends Component {
             exemplo: 'Variável exemplo do state do componente View.',
             btnAddIsDisabled: true,
             selectedNames: [],
+            btnEnabledColor: 'red'
         }
     }
 
@@ -39,14 +40,34 @@ class View extends Component {
 
     handleClickAdd = () => {
 
-        const { jogadores, dispatch } = this.props;
+
+        const { jogadores, dispatch, pontuacao } = this.props;
+        const { selectedNames } = this.state;
+        const newPontuacao = [];
         let myArray = [];
-        jogadores.forEach(() => {
+        console.log(selectedNames)
+        console.log(jogadores)
+        jogadores.forEach((j, index) => {
             myArray.push('-');
+
+            let indexOf = 0;
+
+            selectedNames.forEach((name, index) => {
+                if (name === j) {
+                    indexOf = index;
+                }
+            })
+
+            newPontuacao[index] = pontuacao[indexOf];
         });
+        console.log(newPontuacao)
+
+        dispatch(addPontos(
+            newPontuacao
+        ));
 
         dispatch(addPartida(
-            jogadores
+            selectedNames
         ));
 
         this.setState({
@@ -67,11 +88,16 @@ class View extends Component {
     }
 
     render() {
-        const { exemplo, btnAddIsDisabled, selectedNames, selectPlayer1 } = this.state;
-        const { dispatch, message, exemplo1, jogadores, partidas } = this.props;
+        const { exemplo, btnAddIsDisabled, selectedNames, selectPlayer1, btnEnabledColor } = this.state;
+        const { dispatch, message, exemplo1, jogadores, partidas, pontuacao, pontucaoJogadores } = this.props;
         const jogadoresOptions = ['-', ...jogadores];
         let count = 0;
 
+        if (!btnAddIsDisabled && selectedNames.length !== 0) {
+            document.getElementsByClassName('btn-add')[0].classList.add('enabled');
+        } else if (btnAddIsDisabled && selectedNames.length !== 0) {
+            document.getElementsByClassName('btn-add')[0].classList.remove('enabled');
+        }
 
         selectedNames.forEach((s) => {
             if (s !== '-') {
@@ -86,9 +112,11 @@ class View extends Component {
         }
 
         if (count !== selectedNames.length && !btnAddIsDisabled) {
+
             this.setState({
                 btnAddIsDisabled: true,
-            })
+            });
+
         }
 
 
@@ -96,26 +124,24 @@ class View extends Component {
 
         return (
             <div className='view'>
-                <p>Exemplo:{exemplo}</p>
-                <p>Exemplo1:{exemplo1}</p>
-                <p>Message:{message}</p>
+
 
                 {
-                    jogadores.map((jogador) => (<div>{jogador}</div>))
+                    jogadores.map((jogador, index) => (<div>{jogador}:{pontucaoJogadores[index]}</div>))
                 }
 
                 <table>
                     <th>Partida</th>
                     {
-                        jogadores.map((jogador, index) => (<th>{index + 1}° Lugar</th>))
+                        jogadores.map((jogador, index) => (<th key={`th${index}`}>{index + 1}° Lugar</th>))
                     }
                     {
                         partidas.rounds.map((round, index) => (
-                            <tr>Partida {index + 1}
+                            <tr key={`partida${index}`} >Partida {index + 1}
                                 {
 
                                     Object.entries(round).filter((entry) => entry[0].includes('Lugar')).map((a) => (
-                                        <td>{a[1]}</td>
+                                        <td key={`td-${a}${index}`}>{a[1]}</td>
                                     ))
                                 }
                             </tr>
@@ -126,8 +152,8 @@ class View extends Component {
                         {
 
                             jogadores.map((jogador, index) => (
-                                <td>
-                                    <select name={`selectPlayer${index + 1}`} onChange={
+                                <td key={`td${jogador}${index}`}>
+                                    <select key={`select${jogador}${index}`} name={`selectPlayer${index + 1}`} onChange={
                                         (target) => { this.handleChangeSelect(target, index) }
                                     } >
                                         {
@@ -136,9 +162,9 @@ class View extends Component {
                                             jogadoresOptions.map((player, i) => {
 
                                                 if (!selectedNames.includes(player)) {
-                                                    return <option value={player} > {player} </option>
+                                                    return <option key={`option${index}${player}`} value={player} > {player} </option>
                                                 } else if (selectedNames[index] === player) {
-                                                    return <option value={selectedNames[index]} selected > {selectedNames[index]} </option>
+                                                    return <option key={`option${index}${player}`} value={selectedNames[index]} selected > {selectedNames[index]} </option>
                                                 } else {
                                                     //return <option value='-' >-</option>
                                                 }
@@ -150,16 +176,16 @@ class View extends Component {
                             ))
                         }
                     </tr>
-                    <button disabled={btnAddIsDisabled} onClick={this.handleClickAdd}>
+                    <button className='btn-add' disabled={btnAddIsDisabled} onClick={this.handleClickAdd} style={{ color: 'black' }}  >
                         +
                     </button>
 
                 </table>
 
-                <button onClick={() => {
+                {/* <button onClick={() => {
                     dispatch(addPartida(['jeh', 'job', 'victor', 'gih', 'criolo', 'pedra', 'anthena']))
                     dispatch(addPlayer('kkk'))
-                }} >SetExemplo</button>
+                }} >SetExemplo</button> */}
 
 
 
@@ -174,7 +200,9 @@ const mapStateToProps = (state) => ({
     message: state.exemplo.message,
     exemplo1: state.exemplo.exemplo1,
     jogadores: state.jogador.lista,
+    pontucaoJogadores: state.jogador.pontos,
     partidas: state.partida,
+    pontuacao: state.partida.pontuacao,
 
 });
 
