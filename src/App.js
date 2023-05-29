@@ -1,4 +1,4 @@
-import { Switch, Route } from 'react-router-dom/cjs/react-router-dom.min';
+import { Switch, Route, Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 
 import './App.css';
 import View from './pages/View';
@@ -7,9 +7,10 @@ import View from './pages/View';
 function App() {
   return (
     <div className="App">
-      Poker Counter App
+      Poker Counter App - hehe
       <Switch>
-        <Route exact path="/" component={View} ></Route>
+        <Route exact path="/poker-counter" component={View} ></Route>
+        <Redirect to='/poker-counter' />
       </Switch>
 
     </div>
