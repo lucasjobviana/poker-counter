@@ -37,6 +37,23 @@ class View extends Component {
 
     }
 
+    handleClickAdd = () => {
+
+        const { jogadores, dispatch } = this.props;
+        let myArray = [];
+        jogadores.forEach(() => {
+            myArray.push('-');
+        });
+
+        dispatch(addPartida(
+            jogadores
+        ));
+
+        this.setState({
+            selectedNames: myArray
+        })
+    }
+
     componentDidMount() {
         const { jogadores } = this.props;
         let myArray = [];
@@ -53,7 +70,26 @@ class View extends Component {
         const { exemplo, btnAddIsDisabled, selectedNames, selectPlayer1 } = this.state;
         console.log(selectedNames)
         const { dispatch, message, exemplo1, jogadores, partidas } = this.props;
+        let count = 0;
+        let isDisabled = true;
 
+        selectedNames.forEach((s) => {
+            if (s !== '-') {
+                count += 1;
+            }
+        })
+
+        if (count === selectedNames.length && btnAddIsDisabled && selectedNames.length !== 0) {
+            alert('count é igual')
+            this.setState({
+                btnAddIsDisabled: false,
+            })
+        }
+        else {
+            // this.setState({
+            //     btnAddIsDisabled: true,
+            // })
+        }
 
 
         const jogadoresOptions = ['-', ...jogadores];
@@ -122,11 +158,7 @@ class View extends Component {
                             ))
                         }
                     </tr>
-                    <button disabled={btnAddIsDisabled} onClick={() => {
-                        dispatch(addPartida(
-                            jogadores
-                        ))
-                    }}>
+                    <button disabled={btnAddIsDisabled} onClick={this.handleClickAdd}>
                         +
                     </button>
 
