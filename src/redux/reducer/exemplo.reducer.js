@@ -5,7 +5,7 @@ const INITIAL_STATE = {
 
 const exemplo = (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case 'SET_EXEMPLO': return { ...state, exemplo: action.payLoad }
+        case 'SET_EXEMPLO': return { ...state, exemplo1: action.payLoad }
         default: return state;
     }
 }
