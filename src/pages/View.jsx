@@ -68,10 +68,10 @@ class View extends Component {
 
     render() {
         const { exemplo, btnAddIsDisabled, selectedNames, selectPlayer1 } = this.state;
-        console.log(selectedNames)
         const { dispatch, message, exemplo1, jogadores, partidas } = this.props;
+        const jogadoresOptions = ['-', ...jogadores];
         let count = 0;
-        let isDisabled = true;
+
 
         selectedNames.forEach((s) => {
             if (s !== '-') {
@@ -80,28 +80,20 @@ class View extends Component {
         })
 
         if (count === selectedNames.length && btnAddIsDisabled && selectedNames.length !== 0) {
-            alert('count é igual')
             this.setState({
                 btnAddIsDisabled: false,
             })
         }
-        else {
-            // this.setState({
-            //     btnAddIsDisabled: true,
-            // })
+
+        if (count !== selectedNames.length && !btnAddIsDisabled) {
+            this.setState({
+                btnAddIsDisabled: true,
+            })
         }
 
 
-        const jogadoresOptions = ['-', ...jogadores];
-        for (let i = 0; i < 4; i += 1) {
-            console.log([`selectPlayer${i + 1}`])
-        }
 
-        /*
-        {
-                        partidas.round.map((round, index) => (<tr>Partida {index}</tr>))
-                    }
-        */
+
         return (
             <div className='view'>
                 <p>Exemplo:{exemplo}</p>
