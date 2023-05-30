@@ -119,25 +119,38 @@ class View extends Component {
 
         }
 
+        const jogadoresPontuacao = pontucaoJogadores.map((pontuacao, index) => {
+            const newObject = {};
+            newObject['pontuacao'] = pontuacao;
+            newObject['player'] = jogadores[index];
+            return newObject;
+        })
+        console.log(jogadoresPontuacao)
+        const jogadoresOrdenados = jogadoresPontuacao.sort((b, a) => a['pontuacao'] - b['pontuacao']);
+        console.log(jogadoresOrdenados);
+
 
 
 
         return (
             <div className='view'>
 
-
-                {
-                    jogadores.map((jogador, index) => (<div>{jogador}:{pontucaoJogadores[index]}</div>))
-                }
+                <div className='jogadores-ordenados'>
+                    {
+                        jogadoresOrdenados.map((jogador, index) => (<div>{jogador['player']}:{jogador['pontuacao']}</div>))
+                    }
+                </div>
 
                 <table>
-                    <th>Partida</th>
-                    {
-                        jogadores.map((jogador, index) => (<th key={`th${index}`}>{index + 1}° Lugar</th>))
-                    }
+                    <tr>
+                        <th>Partida</th>
+                        {
+                            jogadores.map((jogador, index) => (<th key={`th${index}`}>{index + 1}° Lugar</th>))
+                        }
+                    </tr>
                     {
                         partidas.rounds.map((round, index) => (
-                            <tr key={`partida${index}`} >Partida {index + 1}
+                            <tr key={`partida${index}`} ><td>P{index + 1}</td>
                                 {
 
                                     Object.entries(round).filter((entry) => entry[0].includes('Lugar')).map((a) => (
@@ -148,7 +161,7 @@ class View extends Component {
                         ))
                     }
                     <tr>
-                        <td>Proxima partida </td>
+                        <td>Atual</td>
                         {
 
                             jogadores.map((jogador, index) => (
