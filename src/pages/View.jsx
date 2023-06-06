@@ -26,9 +26,6 @@ class View extends Component {
                 selectedNames: copia
             });
         } else {
-            //const newState = { ...this.state };
-            //newState['selectedNames'] = [];
-            //this.setState(newState);
             const copia = [...this.state.selectedNames];
             copia[index] = '-';
             this.setState({
@@ -39,8 +36,6 @@ class View extends Component {
     }
 
     handleClickAdd = () => {
-
-
         const { jogadores, dispatch, pontuacao } = this.props;
         const { selectedNames } = this.state;
         const newPontuacao = [];
@@ -67,7 +62,7 @@ class View extends Component {
         ));
 
         dispatch(addPartida(
-            selectedNames
+            selectedNames,
         ));
 
         this.setState({
@@ -76,11 +71,46 @@ class View extends Component {
     }
 
     componentDidMount() {
-        const { jogadores } = this.props;
+        const { jogadores,pontuacao } = this.props;
         let myArray = [];
         jogadores.forEach(() => {
             myArray.push('-');
         });
+
+        
+
+        if(localStorage.getItem('pokerRounds') !==null && localStorage.getItem('pokerRounds').length > 0){
+            const { dispatch, jogadores } = this.props;    
+            console.log(localStorage.getItem('pokerRounds'))
+            const rounds = JSON.parse(localStorage.getItem('pokerRounds'));
+            console.log(rounds);
+            console.log(jogadores)
+            const newPontuacao = [];
+            const myArray = ['-','-','-','-'];
+            
+            rounds.forEach((round,indexOfRound)=>{
+            	jogadores.forEach((player,indexOfPlayer)=>{
+            		let indexOf = 0;
+            		round.forEach((playerOrderByPositionOnRound,indexOfPositionOnRound) => {
+				if(playerOrderByPositionOnRound === player){
+					newPontuacao[indexOfPlayer] = pontuacao[indexOfPositionOnRound];
+				}	
+            		});          		    	
+            	});
+            	
+            	dispatch(addPontos(
+            		    	newPontuacao
+        		)); 
+            	
+            	dispatch(addPartida(
+            		rounds[indexOfRound],'localStorage'
+        	));
+            });
+            
+        }
+        else{
+            localStorage.setItem('pokerRounds','[]')
+        }
 
         this.setState({
             selectedNames: myArray
@@ -91,6 +121,12 @@ class View extends Component {
         const { exemplo, btnAddIsDisabled, selectedNames, selectPlayer1, btnEnabledColor } = this.state;
         const { dispatch, message, exemplo1, jogadores, partidas, pontuacao, pontucaoJogadores } = this.props;
         const jogadoresOptions = ['-', ...jogadores];
+        console.log(localStorage.getItem('pokerRounds'));
+        console.log(partidas)
+
+        
+ 
+        
         let count = 0;
 
         if (!btnAddIsDisabled && selectedNames.length !== 0) {
@@ -114,7 +150,7 @@ class View extends Component {
         if (count !== selectedNames.length && !btnAddIsDisabled) {
 
             this.setState({
-                btnAddIsDisabled: true,
+                btnAddIsDisabled: true,//eh true
             });
 
         }
