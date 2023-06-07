@@ -22,24 +22,16 @@ class View extends Component {
     fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, { headers })
       .then(response =>  response.json())
       .then(data => {
-        console.log(data)
+        //console.log(data)
         const { jogadores,pontuacao,dispatch } = this.props;
-        
-        
-
-	
-
-          
-
-        //console.log(localStorage.getItem('pokerRounds'))
+      
         const rounds = data.partidas;
-        console.log(rounds);
-        console.log(jogadores)
+        //console.log(rounds);
+        //console.log(jogadores)
         const newPontuacao = [];
-        const myArray = [];
+         
         
         rounds.forEach((round,indexOfRound)=>{
-            myArray.push("-");
             
             jogadores.forEach((player,indexOfPlayer)=>{
                 let indexOf = 0;
@@ -60,7 +52,7 @@ class View extends Component {
         });
         
         this.setState({
-        	selectedNames:myArray,
+        	selectedNames: jogadores.map( jogador => '-'),
         })
      
       })
@@ -71,8 +63,8 @@ class View extends Component {
 
     handleChangeSelect = (target, index) => {
 
-        console.log(target.target.name)
-        console.log(target.target.value)
+       // console.log(target.target.name)
+       // console.log(target.target.value)
         if (target.target.value !== '-') {
             const copia = this.state.selectedNames;
             copia[index] = target.target.value;
@@ -91,13 +83,18 @@ class View extends Component {
 
     }
 
-    handleClickAdd = () => {
+    handleClickAdd = () => {  
+     const { selectedNames } = this.state; const { dispachar, jogadores } = this.props; dispachar(selectedNames); 
+     this.setState({
+        	selectedNames: jogadores.map( jogador => '-'),
+        })
+     /*
         const { jogadores, dispatch, pontuacao } = this.props;
         const { selectedNames } = this.state;
         const newPontuacao = [];
         let myArray = [];
-        console.log(selectedNames)
-        console.log(jogadores)
+       // console.log(selectedNames)
+       // console.log(jogadores)
         jogadores.forEach((j, index) => {
             myArray.push('-');
 
@@ -111,7 +108,7 @@ class View extends Component {
 
             newPontuacao[index] = pontuacao[indexOf];
         });
-        console.log(newPontuacao)
+       // console.log(newPontuacao)
 
         dispatch(addPontos(
             newPontuacao
@@ -120,10 +117,10 @@ class View extends Component {
         dispatch(addPartida(
             selectedNames,
         ));
-
+*/
         this.setState({
-            selectedNames: myArray
-        })
+            selectedNames: jogadores.map( jogador => '-'),
+        }) 
     }
 
     componentDidMount() {
@@ -184,8 +181,8 @@ class View extends Component {
         const { exemplo, btnAddIsDisabled, selectedNames, selectPlayer1, btnEnabledColor } = this.state;
         const { dispatch, message, exemplo1, jogadores, partidas, pontuacao, pontucaoJogadores } = this.props;
         const jogadoresOptions = ['-', ...jogadores];
-        console.log(localStorage.getItem('pokerRounds'));
-        console.log(partidas)
+       // console.log(localStorage.getItem('pokerRounds'));
+       // console.log(partidas)
 
         
  
@@ -224,9 +221,9 @@ class View extends Component {
             newObject['player'] = jogadores[index];
             return newObject;
         })
-        console.log(jogadoresPontuacao)
+       // console.log(jogadoresPontuacao)
         const jogadoresOrdenados = jogadoresPontuacao.sort((b, a) => a['pontuacao'] - b['pontuacao']);
-        console.log(jogadoresOrdenados);
+       // console.log(jogadoresOrdenados);
 
 
 
