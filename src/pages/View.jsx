@@ -13,6 +13,51 @@ class View extends Component {
         }
     }
 
+    myFetch = async() => {
+        const owner = 'lucasjobviana';
+        const repo = 'poker-counter';
+        const path = 'data.json';
+        const headers = new Headers();
+    headers.append('Accept', 'application/vnd.github.v3.raw');
+    fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, { headers })
+      .then(response =>  response.json())
+      .then(data => {
+        console.log(data)
+
+        const { dispatch, jogadores, pontuacao } = this.props;  
+
+        //console.log(localStorage.getItem('pokerRounds'))
+        const rounds = data.partidas;
+        console.log(rounds);
+        console.log(jogadores)
+        const newPontuacao = [];
+        const myArray = ['-','-','-','-'];
+        
+        rounds.forEach((round,indexOfRound)=>{
+            jogadores.forEach((player,indexOfPlayer)=>{
+                let indexOf = 0;
+                round.forEach((playerOrderByPositionOnRound,indexOfPositionOnRound) => {
+            if(playerOrderByPositionOnRound === player){
+                newPontuacao[indexOfPlayer] = pontuacao[indexOfPositionOnRound];
+            }	
+                });          		    	
+            });
+            
+            dispatch(addPontos(
+                        newPontuacao
+            )); 
+            
+            dispatch(addPartida(
+                rounds[indexOfRound],'localStorage'
+        ));
+        });
+     
+      })
+      .catch(error => {
+        console.log('Erro ao solicitar json: ', error)
+      });
+      }
+
     handleChangeSelect = (target, index) => {
 
         console.log(target.target.name)
@@ -77,40 +122,42 @@ class View extends Component {
             myArray.push('-');
         });
 
-        
+        this.myFetch();
+        //console.log(partidas);
+       // console.log(partidas.partidas)
 
-        if(localStorage.getItem('pokerRounds') !==null && localStorage.getItem('pokerRounds').length > 0){
-            const { dispatch, jogadores } = this.props;    
-            console.log(localStorage.getItem('pokerRounds'))
-            const rounds = JSON.parse(localStorage.getItem('pokerRounds'));
-            console.log(rounds);
-            console.log(jogadores)
-            const newPontuacao = [];
-            const myArray = ['-','-','-','-'];
+        // if(localStorage.getItem('pokerRounds') !==null && localStorage.getItem('pokerRounds').length > 0){
+        //     const { dispatch, jogadores } = this.props;    
+        //     console.log(localStorage.getItem('pokerRounds'))
+        //     const rounds = JSON.parse(localStorage.getItem('pokerRounds'));
+        //     console.log(rounds);
+        //     console.log(jogadores)
+        //     const newPontuacao = [];
+        //     const myArray = ['-','-','-','-'];
             
-            rounds.forEach((round,indexOfRound)=>{
-            	jogadores.forEach((player,indexOfPlayer)=>{
-            		let indexOf = 0;
-            		round.forEach((playerOrderByPositionOnRound,indexOfPositionOnRound) => {
-				if(playerOrderByPositionOnRound === player){
-					newPontuacao[indexOfPlayer] = pontuacao[indexOfPositionOnRound];
-				}	
-            		});          		    	
-            	});
+        //     rounds.forEach((round,indexOfRound)=>{
+        //     	jogadores.forEach((player,indexOfPlayer)=>{
+        //     		let indexOf = 0;
+        //     		round.forEach((playerOrderByPositionOnRound,indexOfPositionOnRound) => {
+		// 		if(playerOrderByPositionOnRound === player){
+		// 			newPontuacao[indexOfPlayer] = pontuacao[indexOfPositionOnRound];
+		// 		}	
+        //     		});          		    	
+        //     	});
             	
-            	dispatch(addPontos(
-            		    	newPontuacao
-        		)); 
+        //     	dispatch(addPontos(
+        //     		    	newPontuacao
+        // 		)); 
             	
-            	dispatch(addPartida(
-            		rounds[indexOfRound],'localStorage'
-        	));
-            });
+        //     	dispatch(addPartida(
+        //     		rounds[indexOfRound],'localStorage'
+        // 	));
+        //     });
             
-        }
-        else{
-            localStorage.setItem('pokerRounds','[]')
-        }
+        // }
+        // else{
+        //     localStorage.setItem('pokerRounds','[]')
+        // }
 
         this.setState({
             selectedNames: myArray
