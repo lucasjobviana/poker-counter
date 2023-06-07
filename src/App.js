@@ -13,40 +13,64 @@ function App(props) {
    const  pontuacao  = useSelector( state => state.partida.pontuacao);
    
    
+   const saveOnGitRepository = () => {
+   
+    const token = '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';
+    const owner = 'lucasjobviana';
+    const repo = 'poker-counter';
+    const path = 'data.json';
+    const headers = new Headers();
+    const newContent = {myString: 'hehehe'};
+    
+    headers.append('Authorization', `Bearer ${token}`);
+    headers.append('Content-Type', 'application/json');
+    
+    
+    
+    fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, { headers })
+      .then(response =>  response.json())
+      .then(data => {
+      
+        const requestOptions = {
+          method: 'DELETE',
+          headers: headers,
+          body: JSON.stringify({
+            message: 'Excluir arquivo JSON',
+            sha: data.sha,
+          })
+        }
+        //`https://api.github.com/repos/${owner}/${repo}/contents/${path}
+        return fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`,requestOptions);
+    })
+      .catch(error =>{console.log('deuruimmmmmm');})
+      .finally(()=>{
+        const requestOptions = {
+          method: 'PUT',
+          headers: headers,
+          body: JSON.stringify({
+            message: 'Criar novo arquivo JSON',
+            content: btoa(JSON.stringify(newContent)),
+          })
+        }
+      })
+      //excluiu o arquivo
+      
+        
+        //console.log(data)
+       // const { jogadores,pontuacao,dispatch } = this.props;
+      
+        //const rounds = data.partidas;
+        //console.log(rounds);
+        //console.log(jogadores)
+        //const newPontuacao = [];
+   
+   
+   };
+   
+   
   const dispatchRound = (round) => { 
 
     const newPontuacao = [];
-    
-    
-    
-    /*
-    jogadores.forEach((j, index) => {
-            myArray.push('-');
-
-            let indexOf = 0;
-
-            selectedNames.forEach((name, index) => {
-                if (name === j) {
-                    indexOf = index;
-                }
-            })
-
-            newPontuacao[index] = pontuacao[indexOf];
-        });
-     
-
-        dispatch(addPontos(
-            newPontuacao
-        ));
-
-        dispatch(addPartida(
-            selectedNames,
-        ));*/
-
-    
-    
-    
-    
     
     jogadores.forEach((jogador,indexOfJogador) => {
       let indexOf = 0;
@@ -77,7 +101,7 @@ function App(props) {
   }
 
   useEffect(() => {
-    
+    saveOnGitRepository()
   });
 
   return (
