@@ -23,23 +23,30 @@ class View extends Component {
       .then(response =>  response.json())
       .then(data => {
         console.log(data)
+        const { jogadores,pontuacao,dispatch } = this.props;
+        
+        
 
-        const { dispatch, jogadores, pontuacao } = this.props;  
+	
+
+          
 
         //console.log(localStorage.getItem('pokerRounds'))
         const rounds = data.partidas;
         console.log(rounds);
         console.log(jogadores)
         const newPontuacao = [];
-        const myArray = ['-','-','-','-'];
+        const myArray = [];
         
         rounds.forEach((round,indexOfRound)=>{
+            myArray.push("-");
+            
             jogadores.forEach((player,indexOfPlayer)=>{
                 let indexOf = 0;
                 round.forEach((playerOrderByPositionOnRound,indexOfPositionOnRound) => {
-            if(playerOrderByPositionOnRound === player){
-                newPontuacao[indexOfPlayer] = pontuacao[indexOfPositionOnRound];
-            }	
+		    if(playerOrderByPositionOnRound === player){
+		        newPontuacao[indexOfPlayer] = pontuacao[indexOfPositionOnRound];
+		    }	
                 });          		    	
             });
             
@@ -49,8 +56,12 @@ class View extends Component {
             
             dispatch(addPartida(
                 rounds[indexOfRound],'localStorage'
-        ));
+            ));
         });
+        
+        this.setState({
+        	selectedNames:myArray,
+        })
      
       })
       .catch(error => {
@@ -116,13 +127,18 @@ class View extends Component {
     }
 
     componentDidMount() {
+        /*
         const { jogadores,pontuacao } = this.props;
         let myArray = [];
         jogadores.forEach(() => {
             myArray.push('-');
         });
+        */
+
 
         this.myFetch();
+        
+        
         //console.log(partidas);
        // console.log(partidas.partidas)
 
@@ -159,9 +175,9 @@ class View extends Component {
         //     localStorage.setItem('pokerRounds','[]')
         // }
 
-        this.setState({
-            selectedNames: myArray
-        })
+        //this.setState({
+         //   selectedNames: myArray
+        //})
     }
 
     render() {
