@@ -1,3 +1,5 @@
+import { updateData } from "../../fetch/updateData";
+
 const INITIAL_STATE = {
     id: 0,
     pontuacao: [5, 3, 1, 0],
@@ -19,7 +21,8 @@ const partida = (state = INITIAL_STATE, action) => {
                 localStorage.setItem('pokerRounds',JSON.stringify([...pokerRounds,action.payLoad]))
             }else{console.log('é = a localStorga, estou carregando do local storage')}
             
-
+            updateData();
+            
             return {
                 ...state,
                 id: state.id + 1,

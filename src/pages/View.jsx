@@ -14,60 +14,56 @@ class View extends Component {
     }
 
     myFetch = async() => {
-        const owner = 'lucasjobviana';
-        const repo = 'poker-counter';
-        const path = 'data.json';
-        const headers = new Headers();
-    headers.append('Accept', 'application/vnd.github.v3.raw');
-    fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, { headers })
-      .then(response =>  response.json())
-      .then(data => {
-        //console.log(data)
-        const { jogadores,pontuacao,dispatch } = this.props;
-      
-        const rounds = data.partidas;
-        //console.log(rounds);
-        //console.log(jogadores)
-        const newPontuacao = [];
-         
+      const owner = 'lucasjobviana';
+      const repo = 'poker-counter';
+      const path = 'data-pokerCounter.json';
+      const headers = new Headers();
+
+      headers.append('Accept', 'application/vnd.github.v3.raw');
         
-        rounds.forEach((round,indexOfRound)=>{
+      fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, { headers })
+      .then(response =>  response.json())
+      .then(data => { console.log(data)
+          const { jogadores,pontuacao,dispatch } = this.props;
+          const rounds = data.pokerRounds;
+          const newPontuacao = [];
+         
+          rounds.forEach((round,indexOfRound)=>{
             
             jogadores.forEach((player,indexOfPlayer)=>{
-                let indexOf = 0;
-                round.forEach((playerOrderByPositionOnRound,indexOfPositionOnRound) => {
-		    if(playerOrderByPositionOnRound === player){
-		        newPontuacao[indexOfPlayer] = pontuacao[indexOfPositionOnRound];
-		    }	
-                });          		    	
+
+              round.forEach((playerOrderByPositionOnRound,indexOfPositionOnRound) => {
+                
+                if(playerOrderByPositionOnRound === player){
+                  newPontuacao[indexOfPlayer] = pontuacao[indexOfPositionOnRound];
+                }	
+              });          		    	
             });
             
             dispatch(addPontos(
-                        newPontuacao
+              newPontuacao
             )); 
             
             dispatch(addPartida(
-                rounds[indexOfRound],'localStorage'
+              rounds[indexOfRound],'localStorage'
             ));
-        });
-        
-        this.setState({
+          });
+
+          this.setState({
         	selectedNames: jogadores.map( jogador => '-'),
+          })
         })
-     
-      })
-      .catch(error => {
-        console.log('Erro ao solicitar json: ', error)
-      });
-      }
+        .catch(error => {
+          console.log('Erro ao solicitar json: ', error)
+        });
+    } 
 
     handleChangeSelect = (target, index) => {
-
-       // console.log(target.target.name)
-       // console.log(target.target.value)
         if (target.target.value !== '-') {
+            
             const copia = this.state.selectedNames;
             copia[index] = target.target.value;
+           
             this.setState({
                 [target.target.name]: target.target.value,
 
@@ -88,6 +84,8 @@ class View extends Component {
      this.setState({
         	selectedNames: jogadores.map( jogador => '-'),
         })
+
+        
      /*
         const { jogadores, dispatch, pontuacao } = this.props;
         const { selectedNames } = this.state;
@@ -118,12 +116,11 @@ class View extends Component {
             selectedNames,
         ));
 */
-        this.setState({
-            selectedNames: jogadores.map( jogador => '-'),
-        }) 
+        
     }
 
     componentDidMount() {
+        localStorage.setItem('pokerRounds','[]')
         /*
         const { jogadores,pontuacao } = this.props;
         let myArray = [];
