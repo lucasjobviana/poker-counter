@@ -1,5 +1,5 @@
 import { Switch, Route, Redirect } from 'react-router-dom/cjs/react-router-dom.min';
-
+import { updateData } from "./fetch/updateData";
 import './App.css';
 import View from './pages/View';
 import { useEffect } from 'react';
@@ -11,6 +11,7 @@ function App(props) {
      const dispatch = useDispatch();
    const  jogadores  = useSelector( state => state.jogador.lista);
    const  pontuacao  = useSelector( state => state.partida.pontuacao);
+   const  rounds = useSelector( state => state.partida.rounds) 
    
    
 
@@ -54,6 +55,7 @@ function App(props) {
 
   return (
     <div className="App">
+      <button onClick={()=>{updateData(rounds);}}>SAVE</button>
       <h1>Poker Counter App</h1>
       <Switch>
         <Route exact path="/poker-counter"  ><View dispachar={dispatchRound} /></Route>

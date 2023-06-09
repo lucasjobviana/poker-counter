@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setExemplo, addPlayer, addPartida, addPontos } from '../redux/action';
 
+
 class View extends Component {
     constructor(props) {
         super(props);
@@ -20,10 +21,15 @@ class View extends Component {
       const headers = new Headers();
 
       headers.append('Accept', 'application/vnd.github.v3.raw');
+      headers.append('Content-type','application/json')
+      
         
       fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, { headers })
-      .then(response =>  response.json())
-      .then(data => { console.log(data)
+      .then(response => { return response.json();})
+      .then(data => { 
+          console.log(data)
+          console.log(data.pokerRounds)
+          console.log(data.sha)
           const { jogadores,pontuacao,dispatch } = this.props;
           const rounds = data.pokerRounds;
           const newPontuacao = [];
