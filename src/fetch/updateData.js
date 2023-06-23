@@ -52,9 +52,4 @@ export const updateData = async (rounds = [["j","o","o","b"]]) => {
     .catch(error => { 
       console.log('Deu erro ao alterar: ',error);
     })
-    
-  
-    
-   
-   
    };

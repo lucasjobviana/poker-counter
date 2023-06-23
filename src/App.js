@@ -5,6 +5,9 @@ import View from './pages/View';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { setExemplo, addPlayer, addPartida, addPontos } from './redux/action';
+import { addNewRound,getRounds } from './fetch/FireBase';
+
+ 
 
 
 function App(props) {
@@ -49,9 +52,11 @@ function App(props) {
     
   }
 
-  useEffect(() => {
-    //saveOnGitRepository()
-  });
+   useEffect( () => {
+    getRounds();
+    
+
+   });
   
   const roundsMapToDatabasePattern = rounds.map((round)=> {
     console.log('Meu Round do map: ',round);
