@@ -52,10 +52,17 @@ function App(props) {
   useEffect(() => {
     //saveOnGitRepository()
   });
-
+  
+  const roundsMapToDatabasePattern = rounds.map((round)=> {
+    console.log('Meu Round do map: ',round);
+console.log('Meu Round do map: ',[round['1°Lugar'],round['2°Lugar'],round['3°Lugar'],round['4°Lugar']]);
+    return [round['1°Lugar'],round['2°Lugar'],round['3°Lugar'],round['4°Lugar']];
+    
+  });
+console.log(roundsMapToDatabasePattern);
   return (
     <div className="App">
-      <button onClick={()=>{updateData(rounds);}}>SAVE</button>
+      <button onClick={()=>{updateData(roundsMapToDatabasePattern);}}>SAVE</button>
       <h1>Poker Counter App</h1>
       <Switch>
         <Route exact path="/poker-counter"  ><View dispachar={dispatchRound} /></Route>

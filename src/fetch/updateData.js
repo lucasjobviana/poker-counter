@@ -24,8 +24,8 @@ export const updateData = async (rounds = [["j","o","o","b"]]) => {
     console.log(a)
     console.log('https://api.github.com/repos/lucasjobviana/poker-counter/contents/data-pokerCounter.json')
     
-   // const token = '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';
-    const token = localStorage.getItem('tokenPokerData');
+    const token = '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';
+    //const token = localStorage.getItem('tokenPokerData');
     const owner = 'lucasjobviana';
     const repo = 'poker-counter';
     const path = 'data-pokerCounter.json';

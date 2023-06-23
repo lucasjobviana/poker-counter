@@ -24,15 +24,18 @@ class View extends Component {
       headers.append('Content-type','application/json')
       
         
-      fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, { headers })
+      await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, { headers })
       .then(response => { return response.json();})
-      .then(data => { 
-          console.log(data)
-          console.log(data.pokerRounds)
-          console.log(data.sha)
+      .then( data => { 
+          
           const { jogadores,pontuacao,dispatch } = this.props;
           const rounds = data.pokerRounds;
           const newPontuacao = [];
+	  
+ 	  console.log(data)
+          console.log(rounds)
+          console.log(data.sha)
+	  console.log()
          
           rounds.forEach((round,indexOfRound)=>{
             
@@ -51,7 +54,7 @@ class View extends Component {
             )); 
             
             dispatch(addPartida(
-              rounds[indexOfRound],'localStorage'
+              rounds[indexOfRound],
             ));
           });
 
@@ -179,6 +182,8 @@ class View extends Component {
          //   selectedNames: myArray
         //})
     }
+
+	
 
     render() {
         const { exemplo, btnAddIsDisabled, selectedNames, selectPlayer1, btnEnabledColor } = this.state;
