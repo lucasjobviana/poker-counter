@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setExemplo, addPlayer, addPartida, addPontos } from '../redux/action';
+import { getRounds } from '../fetch/FireBase';
 
 
 class View extends Component {
@@ -14,30 +15,15 @@ class View extends Component {
         }
     }
 
-    myFetch = async() => {
-      const owner = 'lucasjobviana';
-      const repo = 'poker-counter';
-      const path = 'data-pokerCounter.json';
-      const headers = new Headers();
 
-      headers.append('Accept', 'application/vnd.github.v3.raw');
-      headers.append('Content-type','application/json')
-      
-        
-      await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, { headers })
-      .then(response => { return response.json();})
-      .then( data => { 
-          
-          const { jogadores,pontuacao,dispatch } = this.props;
-          const rounds = data.pokerRounds;
-          const newPontuacao = [];
-	  
- 	  console.log(data)
-          console.log(rounds)
-          console.log(data.sha)
-	  console.log()
-         
-          rounds.forEach((round,indexOfRound)=>{
+    myFetch = async () => {
+        const rounds = await getRounds();
+        console.log(rounds)
+        const { jogadores,pontuacao,dispatch } = this.props;
+            
+           const newPontuacao = [];
+
+        rounds.forEach((round,indexOfRound)=>{
             
             jogadores.forEach((player,indexOfPlayer)=>{
 
@@ -61,11 +47,60 @@ class View extends Component {
           this.setState({
         	selectedNames: jogadores.map( jogador => '-'),
           })
-        })
-        .catch(error => {
-          console.log('Erro ao solicitar json: ', error)
-        });
-    } 
+
+    }
+    // myFetch = async() => {
+    //   const owner = 'lucasjobviana';
+    //   const repo = 'poker-counter';
+    //   const path = 'data-pokerCounter.json';
+    //   const headers = new Headers();
+
+    //   headers.append('Accept', 'application/vnd.github.v3.raw');
+    //   headers.append('Content-type','application/json')
+      
+        
+    //   await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, { headers })
+    //   .then(response => { return response.json();})
+    //   .then( data => { 
+          
+    //       const { jogadores,pontuacao,dispatch } = this.props;
+    //       const rounds = data.pokerRounds;
+    //       const newPontuacao = [];
+	  
+ 	// //   console.log(data)
+    // //       console.log(rounds)
+    // //       console.log(data.sha)
+	// //   console.log()
+         
+        //   rounds.forEach((round,indexOfRound)=>{
+            
+        //     jogadores.forEach((player,indexOfPlayer)=>{
+
+        //       round.forEach((playerOrderByPositionOnRound,indexOfPositionOnRound) => {
+                
+        //         if(playerOrderByPositionOnRound === player){
+        //           newPontuacao[indexOfPlayer] = pontuacao[indexOfPositionOnRound];
+        //         }	
+        //       });          		    	
+        //     });
+            
+        //     dispatch(addPontos(
+        //       newPontuacao
+        //     )); 
+            
+        //     dispatch(addPartida(
+        //       rounds[indexOfRound],
+        //     ));
+        //   });
+
+        //   this.setState({
+        // 	selectedNames: jogadores.map( jogador => '-'),
+        //   })
+        // })
+        // .catch(error => {
+        //   console.log('Erro ao solicitar json: ', error)
+        // });
+    // } 
 
     handleChangeSelect = (target, index) => {
         if (target.target.value !== '-') {

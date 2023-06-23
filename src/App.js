@@ -7,17 +7,18 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setExemplo, addPlayer, addPartida, addPontos } from './redux/action';
 import { addNewRound,getRounds } from './fetch/FireBase';
 
- 
+// const ROUNDS_TO_SAVE_DATABASE = {};
+
+// window.onbeforeunload = function(){
+//   console.log("dfsadfdsfdsfdsafasdfdsfads___________________________");
+// }
 
 
 function App(props) {
-     const dispatch = useDispatch();
+   const dispatch = useDispatch();
    const  jogadores  = useSelector( state => state.jogador.lista);
    const  pontuacao  = useSelector( state => state.partida.pontuacao);
    const  rounds = useSelector( state => state.partida.rounds) 
-   
-   
-
    
    
   const dispatchRound = (round) => { 
@@ -54,20 +55,18 @@ function App(props) {
 
    useEffect( () => {
     getRounds();
-    
-
    });
   
   const roundsMapToDatabasePattern = rounds.map((round)=> {
-    console.log('Meu Round do map: ',round);
-console.log('Meu Round do map: ',[round['1°Lugar'],round['2°Lugar'],round['3°Lugar'],round['4°Lugar']]);
+    //console.log('Meu Round do map: ',round);
+    //console.log('Meu Round do map: ',[round['1°Lugar'],round['2°Lugar'],round['3°Lugar'],round['4°Lugar']]);
     return [round['1°Lugar'],round['2°Lugar'],round['3°Lugar'],round['4°Lugar']];
     
   });
-console.log(roundsMapToDatabasePattern);
+    //console.log(roundsMapToDatabasePattern);
   return (
     <div className="App">
-      <button onClick={()=>{updateData(roundsMapToDatabasePattern);}}>SAVE</button>
+      <button onClick={()=>{addNewRound(roundsMapToDatabasePattern);}}>SAVE</button>
       <h1>Poker Counter App</h1>
       <Switch>
         <Route exact path="/poker-counter"  ><View dispachar={dispatchRound} /></Route>

@@ -17,9 +17,9 @@ const jogador = (state = INITIAL_STATE, action) => {
         case 'ADD_PLAYER': return { ...state, lista: [...state.lista, action.payLoad], pontos: [...state.pontos, 0] }
         case 'ADD_PONTOS'://payLoad: array com a pontuação do job,1,2,3,...
             const newArray = somarArrays(action.payLoad, state.pontos);
-            console.log("Vou add esse array: ",action.payLoad)
-            console.log("Meu array antigo que esta no state:",state.pontos)
-            console.log("Novo array de pontos: ",newArray);
+            // console.log("Vou add esse array: ",action.payLoad)
+            // console.log("Meu array antigo que esta no state:",state.pontos)
+            // console.log("Novo array de pontos: ",newArray);
             return { ...state, pontos: newArray }
         default: return state;
     }

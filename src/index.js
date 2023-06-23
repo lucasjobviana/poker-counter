@@ -7,10 +7,7 @@ import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 
-window.onbeforeunload = function(){
-  console.log("dfsadfdsfdsfdsafasdfdsfads___________________________");
 
-}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

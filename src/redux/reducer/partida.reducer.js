@@ -8,13 +8,13 @@ const partida = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case 'ADD_PARTIDA': {
             let myArray = {};
-	console.log(action.payLoad)
+	//console.log(action.payLoad)
             action.payLoad.forEach((jogador, index) => {
                 myArray[(index + 1) + '°Lugar'] = action.payLoad[index]
             });
 
             if(action.from !== 'localStorage'){
-                console.log('é !=  de localStorage, estou carregando da pagina')
+                //console.log('é !=  de localStorage, estou carregando da pagina')
                 const pokerRounds = JSON.parse(localStorage.getItem('pokerRounds'));
                 localStorage.setItem('pokerRounds',JSON.stringify([...pokerRounds,action.payLoad]))
             }else{console.log('é = a localStorga, estou carregando do local storage')}
