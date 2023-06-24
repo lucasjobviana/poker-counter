@@ -37,8 +37,12 @@ function App() {
  
   return (
     <div className="App">
+    <div className="btn-menu ">
       <button className='btn-save' onClick={()=>{handleClickBtnSave(rounds)}}>SAVE</button> 
        <button className='btn-reset' onClick={()=>{handleClickBtnReset();dispatch(rmvAllPartidas());}}>RESET</button> 
+       <button className='btn-reset' >THEME</button> 
+       <button className='btn-reset' >OTHER</button> 
+       </div>
       <h1>Poker Counter App</h1>
       <Switch>
         <Route exact path="/poker-counter"  ><View  /></Route>
