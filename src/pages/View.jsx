@@ -83,6 +83,14 @@ class View extends Component {
     }
 
     handleClickAdd = () => {  
+    		
+    		
+    		document.body.style.setProperty('--global-color','green');
+    		
+    		setTimeout(() => {
+    			document.body.style.setProperty('--global-color','red');
+    		},1000);
+    		
         const { selectedNames } = this.state; 
         const { jogadores } = this.props;
 

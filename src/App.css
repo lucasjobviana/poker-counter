@@ -1,3 +1,6 @@
+:root {
+	--global-color: red;
+}
 * {
   margin: 0px;
   padding: 0px;
@@ -15,8 +18,6 @@
   padding-top: 2%;
 
 }
-
-
 
 .view {
   border: 2px solid black;
@@ -37,6 +38,16 @@ table {
   border: 1px solid black;
   background-color: black;
   opacity: 0.8;
+
+}
+
+tr * {
+	
+	border-width: 1px;
+	border-style: solid;
+	border-color: var(--global-color);
+	text-align:center;
+	width:60px;
 }
 
 .btn-add {
@@ -54,19 +65,28 @@ table {
 
 .btn-save {
   position: fixed;
-  top: 0%;
-  right: 0%;
+  top: 1%;
+  right: 1%;
   width: 13%;
   height: 40px;
   z-index: 4;
   background-color: rgba(5, 5, 5, 0.8);
   border: 2px solid black;
   color: white;
-  border-radius: 8%;
+  border-radius: 5px;
 }
 
-.btn-add::click {
-  background-color: blue;
+.btn-reset {
+  position: fixed;
+  top: 50px;
+  right: 1%;
+  width: 13%;
+  height: 40px;
+  z-index: 4;
+  background-color: rgba(5, 5, 5, 0.8);
+  border: 2px solid black;
+  color: white;
+  border-radius: 5px;
 }
 
 .enabled {
@@ -75,17 +95,27 @@ table {
 
 .jogadores-ordenados {
   height: 50px;
-
+	
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: no-wrap;
   align-items: center;
+  justify-content: center;
   font-size: x-large;
+  margin: 5px;
 }
 
 .jogadores-ordenados>div {
   color: white;
   background-color: black;
-  border-radius: 30%;
+  
+  padding: 4px;
+
+	border-width: 1px;
+	border-style: solid;
+	border-color: var(--global-color);
+
   opacity: 0.8;
+  margin: 1px;
+ 
 }

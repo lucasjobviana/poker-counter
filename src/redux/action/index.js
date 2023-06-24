@@ -12,3 +12,6 @@ export const addPartida = (payLoad,from) => { return actionCreator(ADD_PARTIDA, 
 
 export const ADD_PONTOS = 'ADD_PONTOS';
 export const addPontos = (payLoad) => {   return actionCreator(ADD_PONTOS, payLoad);};
+
+export const RMV_ALL_PARTIDAS = 'RMV_ALL_PARTIDAS';
+export const rmvAllPartidas = (payLoad,from) => { return actionCreator(RMV_ALL_PARTIDAS, payLoad, from);};

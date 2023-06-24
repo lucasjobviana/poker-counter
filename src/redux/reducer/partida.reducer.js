@@ -6,6 +6,9 @@ const INITIAL_STATE = {
 
 const partida = (state = INITIAL_STATE, action) => {
     switch (action.type) {
+        case 'RMV_ALL_PARTIDAS': {
+        	return {...state, rounds: []}
+        }
         case 'ADD_PARTIDA': {
             let myArray = {};
             action.payLoad.forEach((jogador, index) => {
