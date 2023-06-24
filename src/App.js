@@ -1,74 +1,53 @@
 import { Switch, Route, Redirect } from 'react-router-dom/cjs/react-router-dom.min';
-import { updateData } from "./fetch/updateData";
-import './App.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateRounds } from './fetch/FireBase';
+import { rmvAllPartidas } from './redux/action';
 import View from './pages/View';
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import { setExemplo, addPlayer, addPartida, addPontos } from './redux/action';
+import './App.css';
+ 
+const handleClickBtnReset = () => {
+	const btnSalvar = document.querySelector('.btn-reset');
+  btnSalvar.style.color = "green";
+  setTimeout(() => {
+    const btnSalvar = document.querySelector('.btn-reset');
+  btnSalvar.style.color = "white";
+  }, 1000);
+	
+	updateRounds([]);
+}
 
-
-function App(props) {
-     const dispatch = useDispatch();
-   const  jogadores  = useSelector( state => state.jogador.lista);
-   const  pontuacao  = useSelector( state => state.partida.pontuacao);
-   const  rounds = useSelector( state => state.partida.rounds) 
-   
-   
-
-   
-   
-  const dispatchRound = (round) => { 
-
-    const newPontuacao = [];
-    
-    jogadores.forEach((jogador,indexOfJogador) => {
-      let indexOf = 0;
-      
-      round.forEach((name,index) => {
-        if(name === jogador){
-          indexOf = index;
-          console.log('achei no if index=',index,name,jogador)
-        }
-      });
-      newPontuacao[indexOfJogador] = pontuacao[indexOf];
-      console.log('newPontuacao[indexofjogador]',newPontuacao[indexOfJogador])
-      console.log('pontuacao[indexof]', pontuacao[indexOf])
-      
-    });
-    
-    console.log('Minha pontuação nova no app: ',newPontuacao)
-    dispatch(addPontos(
-      newPontuacao
-    ));
-
-    dispatch(addPartida(
-      round,
-    ));
-    
-    
-    
-  }
-
-  useEffect(() => {
-    //saveOnGitRepository()
-  });
-  
+const handleClickBtnSave = (rounds) => {
   const roundsMapToDatabasePattern = rounds.map((round)=> {
-    console.log('Meu Round do map: ',round);
-console.log('Meu Round do map: ',[round['1°Lugar'],round['2°Lugar'],round['3°Lugar'],round['4°Lugar']]);
     return [round['1°Lugar'],round['2°Lugar'],round['3°Lugar'],round['4°Lugar']];
-    
   });
-console.log(roundsMapToDatabasePattern);
+
+  const btnSalvar = document.querySelector('.btn-save');
+  btnSalvar.style.color = "green";
+  setTimeout(() => {
+    const btnSalvar = document.querySelector('.btn-save');
+  btnSalvar.style.color = "white";
+  }, 1000);
+
+  updateRounds(roundsMapToDatabasePattern);
+}
+
+function App() {
+  const  rounds = useSelector( state => state.partida.rounds);
+  const dispatch = useDispatch();
+ 
   return (
     <div className="App">
-      <button onClick={()=>{updateData(roundsMapToDatabasePattern);}}>SAVE</button>
+    <div className="btn-menu ">
+      <button className='btn-save' onClick={()=>{handleClickBtnSave(rounds)}}>SAVE</button> 
+       <button className='btn-reset' onClick={()=>{handleClickBtnReset();dispatch(rmvAllPartidas());}}>RESET</button> 
+       <button className='btn-reset' >THEME</button> 
+       <button className='btn-reset' >OTHER</button> 
+       </div>
       <h1>Poker Counter App</h1>
       <Switch>
-        <Route exact path="/poker-counter"  ><View dispachar={dispatchRound} /></Route>
+        <Route exact path="/poker-counter"  ><View  /></Route>
         <Redirect to='/poker-counter' />
       </Switch>
-
     </div>
   );
 }

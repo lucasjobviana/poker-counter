@@ -1,81 +1,76 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setExemplo, addPlayer, addPartida, addPontos } from '../redux/action';
-
+import { addPartida, addPontos } from '../redux/action';
+import { getRounds } from '../fetch/FireBase';
 
 class View extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            exemplo: 'Variável exemplo do state do componente View.',
             btnAddIsDisabled: true,
             selectedNames: [],
-            btnEnabledColor: 'red'
         }
     }
 
-    myFetch = async() => {
-      const owner = 'lucasjobviana';
-      const repo = 'poker-counter';
-      const path = 'data-pokerCounter.json';
-      const headers = new Headers();
+    myFetch = async () => {
+        const rounds = await getRounds();
+        const { jogadores, pontuacao, dispatch } = this.props;  
+        const newPontuacao = [];
 
-      headers.append('Accept', 'application/vnd.github.v3.raw');
-      headers.append('Content-type','application/json')
-      
-        
-      await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, { headers })
-      .then(response => { return response.json();})
-      .then( data => { 
-          
-          const { jogadores,pontuacao,dispatch } = this.props;
-          const rounds = data.pokerRounds;
-          const newPontuacao = [];
-	  
- 	  console.log(data)
-          console.log(rounds)
-          console.log(data.sha)
-	  console.log()
-         
-          rounds.forEach((round,indexOfRound)=>{
-            
+        rounds.forEach((round,indexOfRound)=>{
             jogadores.forEach((player,indexOfPlayer)=>{
-
-              round.forEach((playerOrderByPositionOnRound,indexOfPositionOnRound) => {
-                
-                if(playerOrderByPositionOnRound === player){
-                  newPontuacao[indexOfPlayer] = pontuacao[indexOfPositionOnRound];
-                }	
-              });          		    	
+                round.forEach((playerOrderByPositionOnRound,indexOfPositionOnRound) => {
+                    if(playerOrderByPositionOnRound === player){
+                        newPontuacao[indexOfPlayer] = pontuacao[indexOfPositionOnRound];
+                    }	
+                });          		    	
             });
             
             dispatch(addPontos(
-              newPontuacao
+                newPontuacao
             )); 
             
             dispatch(addPartida(
-              rounds[indexOfRound],
+                rounds[indexOfRound],
             ));
-          });
-
-          this.setState({
-        	selectedNames: jogadores.map( jogador => '-'),
-          })
-        })
-        .catch(error => {
-          console.log('Erro ao solicitar json: ', error)
         });
-    } 
 
+        this.setState({
+            selectedNames: jogadores.map( jogador => '-'),
+        })
+    }
+
+    dispatchRound = (round) => { 
+        const newPontuacao = [];
+        const {jogadores,pontuacao,dispatch} = this.props;
+        
+        jogadores.forEach((jogador,indexOfJogador) => {
+            let indexOf = 0;
+            
+            round.forEach((name,index) => {
+                if(name === jogador){
+                    indexOf = index;
+                }
+            });
+            newPontuacao[indexOfJogador] = pontuacao[indexOf];
+        });
+        
+        dispatch(addPontos(
+            newPontuacao
+        ));
+    
+        dispatch(addPartida(
+            round,
+        ));
+    }
+   
     handleChangeSelect = (target, index) => {
         if (target.target.value !== '-') {
-            
             const copia = this.state.selectedNames;
             copia[index] = target.target.value;
            
             this.setState({
                 [target.target.name]: target.target.value,
-
                 selectedNames: copia
             });
         } else {
@@ -85,116 +80,34 @@ class View extends Component {
                 selectedNames: copia
             })
         }
-
     }
 
     handleClickAdd = () => {  
-     const { selectedNames } = this.state; const { dispachar, jogadores } = this.props; dispachar(selectedNames); 
-     this.setState({
-        	selectedNames: jogadores.map( jogador => '-'),
+    		
+    		
+    		document.body.style.setProperty('--global-color','green');
+    		
+    		setTimeout(() => {
+    			document.body.style.setProperty('--global-color','red');
+    		},1000);
+    		
+        const { selectedNames } = this.state; 
+        const { jogadores } = this.props;
+
+        this.dispatchRound(selectedNames); 
+        this.setState({
+            selectedNames: jogadores.map( jogador => '-'),
         })
-
-        
-     /*
-        const { jogadores, dispatch, pontuacao } = this.props;
-        const { selectedNames } = this.state;
-        const newPontuacao = [];
-        let myArray = [];
-       // console.log(selectedNames)
-       // console.log(jogadores)
-        jogadores.forEach((j, index) => {
-            myArray.push('-');
-
-            let indexOf = 0;
-
-            selectedNames.forEach((name, index) => {
-                if (name === j) {
-                    indexOf = index;
-                }
-            })
-
-            newPontuacao[index] = pontuacao[indexOf];
-        });
-       // console.log(newPontuacao)
-
-        dispatch(addPontos(
-            newPontuacao
-        ));
-
-        dispatch(addPartida(
-            selectedNames,
-        ));
-*/
-        
     }
 
-    componentDidMount() {
-        localStorage.setItem('pokerRounds','[]')
-        /*
-        const { jogadores,pontuacao } = this.props;
-        let myArray = [];
-        jogadores.forEach(() => {
-            myArray.push('-');
-        });
-        */
-
-
+    componentDidMount() { //localStorage.setItem('pokerRounds','[]')
         this.myFetch();
-        
-        
-        //console.log(partidas);
-       // console.log(partidas.partidas)
-
-        // if(localStorage.getItem('pokerRounds') !==null && localStorage.getItem('pokerRounds').length > 0){
-        //     const { dispatch, jogadores } = this.props;    
-        //     console.log(localStorage.getItem('pokerRounds'))
-        //     const rounds = JSON.parse(localStorage.getItem('pokerRounds'));
-        //     console.log(rounds);
-        //     console.log(jogadores)
-        //     const newPontuacao = [];
-        //     const myArray = ['-','-','-','-'];
-            
-        //     rounds.forEach((round,indexOfRound)=>{
-        //     	jogadores.forEach((player,indexOfPlayer)=>{
-        //     		let indexOf = 0;
-        //     		round.forEach((playerOrderByPositionOnRound,indexOfPositionOnRound) => {
-		// 		if(playerOrderByPositionOnRound === player){
-		// 			newPontuacao[indexOfPlayer] = pontuacao[indexOfPositionOnRound];
-		// 		}	
-        //     		});          		    	
-        //     	});
-            	
-        //     	dispatch(addPontos(
-        //     		    	newPontuacao
-        // 		)); 
-            	
-        //     	dispatch(addPartida(
-        //     		rounds[indexOfRound],'localStorage'
-        // 	));
-        //     });
-            
-        // }
-        // else{
-        //     localStorage.setItem('pokerRounds','[]')
-        // }
-
-        //this.setState({
-         //   selectedNames: myArray
-        //})
     }
-
-	
 
     render() {
-        const { exemplo, btnAddIsDisabled, selectedNames, selectPlayer1, btnEnabledColor } = this.state;
-        const { dispatch, message, exemplo1, jogadores, partidas, pontuacao, pontucaoJogadores } = this.props;
+        const { btnAddIsDisabled, selectedNames  } = this.state;
+        const {   jogadores, partidas,  pontucaoJogadores } = this.props;
         const jogadoresOptions = ['-', ...jogadores];
-       // console.log(localStorage.getItem('pokerRounds'));
-       // console.log(partidas)
-
-        
- 
-        
         let count = 0;
 
         if (!btnAddIsDisabled && selectedNames.length !== 0) {
@@ -216,11 +129,9 @@ class View extends Component {
         }
 
         if (count !== selectedNames.length && !btnAddIsDisabled) {
-
             this.setState({
-                btnAddIsDisabled: true,//eh true
+                btnAddIsDisabled: true,
             });
-
         }
 
         const jogadoresPontuacao = pontucaoJogadores.map((pontuacao, index) => {
@@ -228,17 +139,12 @@ class View extends Component {
             newObject['pontuacao'] = pontuacao;
             newObject['player'] = jogadores[index];
             return newObject;
-        })
-       // console.log(jogadoresPontuacao)
+        });
+ 
         const jogadoresOrdenados = jogadoresPontuacao.sort((b, a) => a['pontuacao'] - b['pontuacao']);
-       // console.log(jogadoresOrdenados);
-
-
-
-
+ 
         return (
             <div className='view'>
-
                 <div className='jogadores-ordenados'>
                     {
                         jogadoresOrdenados.map((jogador, index) => (<div>{jogador['player']}:{jogador['pontuacao']}</div>))
@@ -255,72 +161,50 @@ class View extends Component {
                     {
                         partidas.rounds.map((round, index) => (
                             <tr key={`partida${index}`} ><td>P{index + 1}</td>
-                                {
-
-                                    Object.entries(round).filter((entry) => entry[0].includes('Lugar')).map((a) => (
-                                        <td key={`td-${a}${index}`}>{a[1]}</td>
-                                    ))
-                                }
+                            {
+                                Object.entries(round).filter((entry) => entry[0].includes('Lugar')).map((a) => (
+                                    <td key={`td-${a}${index}`}>{a[1]}</td>
+                                ))
+                            }
                             </tr>
                         ))
                     }
                     <tr>
                         <td>Atual</td>
                         {
-
                             jogadores.map((jogador, index) => (
                                 <td key={`td${jogador}${index}`}>
                                     <select key={`select${jogador}${index}`} name={`selectPlayer${index + 1}`} onChange={
                                         (target) => { this.handleChangeSelect(target, index) }
                                     } >
-                                        {
-
-
-                                            jogadoresOptions.map((player, i) => {
-
-                                                if (!selectedNames.includes(player)) {
-                                                    return <option key={`option${index}${player}`} value={player} > {player} </option>
-                                                } else if (selectedNames[index] === player) {
-                                                    return <option key={`option${index}${player}`} value={selectedNames[index]} selected > {selectedNames[index]} </option>
-                                                } else {
-                                                    //return <option value='-' >-</option>
-                                                }
-
-                                            })
-                                        }
+                                    {
+                                        jogadoresOptions.map((player, i) => {
+                                            if (!selectedNames.includes(player)) {
+                                                return <option key={`option${index}${player}`} value={player} > {player} </option>
+                                            } else if (selectedNames[index] === player) {
+                                                return <option key={`option${index}${player}`} value={selectedNames[index]} selected > {selectedNames[index]} </option>
+                                            }
+                                        })
+                                    }
                                     </select>
                                 </td>
-                            ))
+                            )) 
                         }
                     </tr>
                     <button className='btn-add' disabled={btnAddIsDisabled} onClick={this.handleClickAdd} style={{ color: 'black' }}  >
                         +
                     </button>
-
                 </table>
-
-                {/* <button onClick={() => {
-                    dispatch(addPartida(['jeh', 'job', 'victor', 'gih', 'criolo', 'pedra', 'anthena']))
-                    dispatch(addPlayer('kkk'))
-                }} >SetExemplo</button> */}
-
-
-
-
-
             </div >
         )
     }
 }
 
 const mapStateToProps = (state) => ({
-    message: state.exemplo.message,
-    exemplo1: state.exemplo.exemplo1,
     jogadores: state.jogador.lista,
     pontucaoJogadores: state.jogador.pontos,
     partidas: state.partida,
     pontuacao: state.partida.pontuacao,
-
 });
 
 export default connect(mapStateToProps)(View);
